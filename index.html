@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aunty Lucy Schools Exam Portal</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f8f9fa; }
+    header { background: #004080; color: white; padding: 10px; text-align: center; }
+    header img { height: 60px; }
+    nav { background: #0059b3; padding: 10px; text-align: center; }
+    nav button { display: block; width: 100%; padding: 12px; margin: 5px 0; background: #0073e6; border: none; color: white; font-size: 18px; border-radius: 6px; cursor: pointer; }
+    nav button:hover { background: #005bb5; }
+    .banner { background: #0059b3; color: white; padding: 10px; overflow: hidden; }
+    .banner span { display: inline-block; animation: scroll-left 20s linear infinite; }
+    @keyframes scroll-left { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+    .container { padding: 20px; }
+    .hidden { display: none; }
+    form { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-top: 20px; }
+    form input, form select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+    form button { background: #0073e6; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; }
+    form button:hover { background: #005bb5; }
+    footer { background: #004080; color: white; text-align: center; padding: 10px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="auntylucylogo.png" alt="Aunty Lucy Schools Logo">
+  <h1>Aunty Lucy Nursery & Primary School</h1>
+</header>
+
+<div class="banner" id="banner">
+  <span>
+    Welcome to Aunty Lucy Nursery and Primary School a citadel of knowledge for every child.
+    Aunty Lucy stands out and exhibits the following attributes. We are Able Unique Noble Topmost Yielding Liberty Certain.
+    We are AUNTY LUCY.
+  </span>
+</div>
+
+<nav>
+  <button onclick="showPage('home')">Home</button>
+  <button onclick="showPage('examPortal')">Exam Portal</button>
+  <button onclick="showPage('about')">About Us</button>
+  <button onclick="showPage('contact')">Contact</button>
+</nav>
+
+<div class="container">
+  <div id="home">
+    <h2>Welcome</h2>
+    <p>This is the official exam portal of Aunty Lucy Schools.</p>
+  </div>
+
+  <div id="examPortal" class="hidden">
+    <h2>Exam Portal</h2>
+    <label>Choose an option:</label>
+    <select id="authType" onchange="showAuthForm()">
+      <option value="">--Select--</option>
+      <option value="register">Register</option>
+      <option value="login">Login</option>
+    </select>
+    
+    <div id="authForms" class="hidden">
+      <label>Are you a:</label>
+      <select id="userType" onchange="showUserForm()">
+        <option value="">--Select--</option>
+        <option value="pupil">Pupil</option>
+        <option value="teacher">Teacher</option>
+      </select>
+    </div>
+
+    <!-- Pupil Registration -->
+    <form id="pupilRegister" class="hidden">
+      <h3>Pupil Registration</h3>
+      <input type="text" id="pupilName" placeholder="Full Name" required>
+      <input type="text" id="pupilPhone" placeholder="Phone (10 digits)" maxlength="10" required>
+      <input type="text" id="classCode" placeholder="Class Code (4 digits)" required>
+      <input type="password" id="pupilPassword" placeholder="Password" required>
+      <button type="button" onclick="registerPupil()">Register</button>
+    </form>
+
+    <!-- Teacher Registration -->
+    <form id="teacherRegister" class="hidden">
+      <h3>Teacher Registration</h3>
+      <input type="text" id="teacherName" placeholder="Full Name" required>
+      <input type="text" id="teacherPhone" placeholder="Phone (10 digits)" maxlength="10" required>
+      <input type="password" id="teacherPassword" placeholder="Password" required>
+      <button type="button" onclick="registerTeacher()">Register</button>
+    </form>
+
+    <!-- Pupil Login -->
+    <form id="pupilLogin" class="hidden">
+      <h3>Pupil Login</h3>
+      <input type="text" id="loginPupilPhone" placeholder="Phone (10 digits)" required>
+      <input type="password" id="loginPupilPassword" placeholder="Password" required>
+      <button type="button" onclick="loginPupil()">Login</button>
+    </form>
+
+    <!-- Teacher Login -->
+    <form id="teacherLogin" class="hidden">
+      <h3>Teacher Login</h3>
+      <input type="text" id="loginTeacherPhone" placeholder="Phone (10 digits)" required>
+      <input type="password" id="loginTeacherPassword" placeholder="Password" required>
+      <button type="button" onclick="loginTeacher()">Login</button>
+    </form>
+  </div>
+
+  <div id="about" class="hidden">
+    <h2>About Us</h2>
+    <p>Aunty Lucy Schools is committed to excellence in education.</p>
+  </div>
+
+  <div id="contact" class="hidden">
+    <h2>Contact Us</h2>
+    <p>Phone: +234 8032428279</p>
+    <p>Email: auntylucyschools22@gmail.com</p>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 Aunty Lucy Schools. All Rights Reserved.</p>
+</footer>
+
+<!-- Firebase SDK -->
+<script type="module">
+  // ? Paste your Firebase config here
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAeOOgm2Z4cWUGc8xBE8TkQXNxQD1dlEA4",
+    authDomain: "aunty-lucy-schools.firebaseapp.com",
+    projectId: "aunty-lucy-schools",
+    storageBucket: "aunty-lucy-schools.firebasestorage.app",
+    messagingSenderId: "905356627608",
+    appId: "1:905356627608:web:480c482955711635754aed",
+    measurementId: "G-S6V6PZ6X90"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ====== Navigation ======
+  function showPage(pageId) {
+    document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
+    document.getElementById(pageId).classList.remove('hidden');
+    // hide banner during exam portal
+    document.getElementById('banner').style.display = (pageId === 'examPortal') ? 'none' : 'block';
+  }
+
+  function showAuthForm() {
+    const authType = document.getElementById('authType').value;
+    document.getElementById('authForms').classList.toggle('hidden', authType === '');
+    document.getElementById('pupilRegister').classList.add('hidden');
+    document.getElementById('teacherRegister').classList.add('hidden');
+    document.getElementById('pupilLogin').classList.add('hidden');
+    document.getElementById('teacherLogin').classList.add('hidden');
+  }
+
+  function showUserForm() {
+    const authType = document.getElementById('authType').value;
+    const userType = document.getElementById('userType').value;
+    document.getElementById('pupilRegister').classList.add('hidden');
+    document.getElementById('teacherRegister').classList.add('hidden');
+    document.getElementById('pupilLogin').classList.add('hidden');
+    document.getElementById('teacherLogin').classList.add('hidden');
+
+    if (authType === 'register' && userType === 'pupil') document.getElementById('pupilRegister').classList.remove('hidden');
+    if (authType === 'register' && userType === 'teacher') document.getElementById('teacherRegister').classList.remove('hidden');
+    if (authType === 'login' && userType === 'pupil') document.getElementById('pupilLogin').classList.remove('hidden');
+    if (authType === 'login' && userType === 'teacher') document.getElementById('teacherLogin').classList.remove('hidden');
+  }
+
+  // ====== Registration/Login Functions ======
+  async function registerPupil() {
+    const name = document.getElementById('pupilName').value;
+    const phone = "+234" + document.getElementById('pupilPhone').value;
+    const code = document.getElementById('classCode').value;
+    const password = document.getElementById('pupilPassword').value;
+
+    await setDoc(doc(db, "users", phone), { type: "pupil", name, phone, code, password });
+    alert("Pupil registered successfully!");
+  }
+
+  async function registerTeacher() {
+    const name = document.getElementById('teacherName').value;
+    const phone = "+234" + document.getElementById('teacherPhone').value;
+    const password = document.getElementById('teacherPassword').value;
+
+    await setDoc(doc(db, "users", phone), { type: "teacher", name, phone, password });
+    alert("Teacher registered successfully!");
+  }
+
+  async function loginPupil() {
+    const phone = "+234" + document.getElementById('loginPupilPhone').value;
+    const password = document.getElementById('loginPupilPassword').value;
+    const docRef = doc(db, "users", phone);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists() && docSnap.data().password === password) {
+      alert("Pupil logged in!");
+    } else {
+      alert("Invalid login.");
+    }
+  }
+
+  async function loginTeacher() {
+    const phone = "+234" + document.getElementById('loginTeacherPhone').value;
+    const password = document.getElementById('loginTeacherPassword').value;
+    const docRef = doc(db, "users", phone);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists() && docSnap.data().password === password) {
+      alert("Teacher logged in!");
+    } else {
+      alert("Invalid login.");
+    }
+  }
+</script>
+
+</body>
+</html>
